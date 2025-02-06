@@ -1,7 +1,7 @@
 #include <FastLED.h>
 #include <Encoder.h>
 
-#define NUM_LEDS                  83
+#define NUM_LEDS                  250
 #define LED_PIN                   8
 #define BUTTON_PIN                7
 #define POT_PIN_1A                2
@@ -15,6 +15,10 @@
 #define IDLE_TRANSITION_OUT_TIME  100
 #define IDLE_TRANSITION_IN_TIME   5
 
+// Shooting Stars Animation
+#define SPEED       10 // Inverse
+#define STAR_FADE   200 // (0-255 where 255 is no fade)
+
 // Variables to store the readings
 int pot1Cache[POT_CACHE_SIZE] = {0};
 int pot2Cache[POT_CACHE_SIZE] = {0};
@@ -22,8 +26,9 @@ int pot1Index = 0;
 int pot2Index = 0;
 int buttonState = 0;
 
-// Idle timer
+// Timers
 long idle_ticker = 0;
+long active_ticker = 0;
 
 // Variable for hue shifting
 int startingHue = 0;
@@ -40,7 +45,7 @@ void setup() {
   // Set the button pin as input
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
-  FastLED.addLeds<WS2811, LED_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.clear();
   FastLED.show();
 }
@@ -59,12 +64,12 @@ void loop() {
 
   //// LEDs
   // Clear all LEDs
-  FastLED.clear();
-
   if (is_idle(pot1, pot2)) {
+    active_ticker = 0;
     rainbow_cycle();
   } else {
     shooting_stars(pot1, pot2);
+    active_ticker++;
   }
 
   // Update the LED strip
@@ -134,21 +139,21 @@ void rainbow_cycle() {
   }
 }
 
-#define MAX_LED                80
-#define SPACE_BETWEEN_GROUP_1  8
-#define SPACE_BETWEEN_GROUP_2  10
-#define SPEED                  50
+bool group_on(int light_index, long pot_pos) {
+  long pos = ((pot_pos % (NUM_LEDS * SPEED)) + (NUM_LEDS * SPEED)) % (NUM_LEDS * SPEED); // Handle negatives
 
-bool group_on(int group_index, long pot_pos, bool first_pot) {
-  int space_between_group = first_pot ? SPACE_BETWEEN_GROUP_1 : SPACE_BETWEEN_GROUP_2;
-  long pos = ((pot_pos % (MAX_LED * SPEED)) + (MAX_LED * SPEED)) % (MAX_LED * SPEED);
+  // Reduce to postion in LED index range
+  pos = (pos / SPEED) % NUM_LEDS;
 
-  // pos_1 
-  pos = (pos / SPEED) % MAX_LED;
-  return pos % space_between_group == group_index % space_between_group;
+  return light_index == pos || ((light_index + NUM_LEDS / 2) % NUM_LEDS) == pos;
 }
 
 void shooting_stars(long pot_1, long pot_2) {
+  if (active_ticker == 0) {
+    fill_solid(leds, NUM_LEDS, CRGB::Black);
+  }
+
+  // Fade out
   long brightness;
   if (idle_ticker > IDLE_TICKS) {
     brightness = map((float)(idle_ticker - IDLE_TICKS) / IDLE_TRANSITION_OUT_TIME * 255, 255, 0, 0, 255);
@@ -156,16 +161,19 @@ void shooting_stars(long pot_1, long pot_2) {
     brightness = 255;
   }
 
-  fill_solid(leds, NUM_LEDS, CRGB::Black);  // Turn off all LEDs
   for (int i = 0; i < NUM_LEDS; i++) {
-    bool group_1 = group_on(i, pot_1, true);
-    bool group_2 = group_on(i, pot_2, false);
-    if (group_1 && group_2) {
-      leds[i] = CRGB(brightness, brightness, brightness);
-    } else if (group_1) {
-      leds[i] = CRGB(0, 0, brightness);
-    } else if (group_2) {
-      leds[i] = CRGB(0, brightness, 0);
+    leds[i].nscale8(STAR_FADE);  // 230/255 ≈ 0.9 (reduces brightness by ~10%)
+  }
+
+  for (int i = 0; i < NUM_LEDS; i++) {
+    bool group_1 = group_on(i, pot_1);
+    bool group_2 = group_on(i, pot_2);
+    long brightness_blue = 0; long brightness_green = 0;
+    if (group_1) {
+      leds[i].b = brightness;
+    } 
+    if (group_2) {
+      leds[i].g = brightness;
     }
   }
 }
