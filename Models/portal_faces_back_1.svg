@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="24in"
+   height="48in"
+   viewBox="0 0 609.60001 1219.2"
+   version="1.1"
+   id="svg14655"
+   inkscape:version="1.0.1 (c497b03c, 2020-09-10)"
+   sodipodi:docname="portal_faces_back_1.svg">
+  <defs
+     id="defs14649">
+    <marker
+       id="DistanceX"
+       orient="auto"
+       refX="0.0"
+       refY="0.0"
+       style="overflow:visible">
+      <path
+         d="M 3,-3 L -3,3 M 0,-5 L  0,5"
+         style="stroke:#000000; stroke-width:0.5"
+         id="path15455" />
+    </marker>
+    <pattern
+       id="Hatch"
+       patternUnits="userSpaceOnUse"
+       width="8"
+       height="8"
+       x="0"
+       y="0">
+      <path
+         d="M8 4 l-4,4"
+         stroke="#000000"
+         stroke-width="0.25"
+         linecap="square"
+         id="path15458" />
+      <path
+         d="M6 2 l-4,4"
+         stroke="#000000"
+         stroke-width="0.25"
+         linecap="square"
+         id="path15460" />
+      <path
+         d="M4 0 l-4,4"
+         stroke="#000000"
+         stroke-width="0.25"
+         linecap="square"
+         id="path15462" />
+    </pattern>
+    <symbol
+       id="*MODEL_SPACE" />
+    <symbol
+       id="*PAPER_SPACE" />
+    <marker
+       id="DistanceX-5"
+       orient="auto"
+       refX="0.0"
+       refY="0.0"
+       style="overflow:visible">
+      <path
+         d="M 3,-3 L -3,3 M 0,-5 L  0,5"
+         style="stroke:#000000; stroke-width:0.5"
+         id="path15505" />
+    </marker>
+    <pattern
+       id="Hatch-2"
+       patternUnits="userSpaceOnUse"
+       width="8"
+       height="8"
+       x="0"
+       y="0">
+      <path
+         d="M8 4 l-4,4"
+         stroke="#000000"
+         stroke-width="0.25"
+         linecap="square"
+         id="path15508" />
+      <path
+         d="M6 2 l-4,4"
+         stroke="#000000"
+         stroke-width="0.25"
+         linecap="square"
+         id="path15510" />
+      <path
+         d="M4 0 l-4,4"
+         stroke="#000000"
+         stroke-width="0.25"
+         linecap="square"
+         id="path15512" />
+    </pattern>
+    <symbol
+       id="*MODEL_SPACE-3" />
+    <symbol
+       id="*PAPER_SPACE-2" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="2222.836"
+     inkscape:cy="4540.3244"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="in"
+     inkscape:window-width="1252"
+     inkscape:window-height="784"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata14652">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g15497"
+       transform="matrix(0.26458333,0,0,0.26458333,929.66799,-712.47377)">
+      <g
+         inkscape:label="0"
+         id="g15469" />
+      <g
+         inkscape:label="CUTOUTS"
+         id="g15471" />
+      <g
+         inkscape:label="PERIMETER"
+         id="g15475">
+        <path
+           d="m -3288.2835,3120.877 312,371.8271 v 1533.7603 l 59.5063,70.9169 h 250.0968 a 71.716535,71.716535 0 1 1 0,71.4331 h -283.4065 l -97.6296,-116.3504 v -499.1446 l -96.567,80.6473 v 453.6447 l 282.0027,336.0777 a 71.716535,71.716535 0 1 1 -54.7209,45.9163 l -298.7148,-355.9944 v -513.0553 l 168,-140.3041 v -125.814 l -264.567,220.9514 v 593.3694 l 250.6178,298.6746 v 606.8521 a 71.716535,71.716535 0 1 1 -71.4331,0 v -580.8525 l -250.6177,-298.6746 v -652.78 l 336,-280.6082 v -337.6225 l -183.9247,153.6034 a 71.716535,71.716535 0 1 1 -45.7889,-54.8275 l 229.7136,-191.8438 v -179.9637 l -312.0001,-371.8271 v -408.6524 h -96.5669 v 2237.2212 h -12 v 1080.0601 l 2.8417,7.8074 600.2143,715.3076 9.511,-7.9806 a 2855.7165,2855.7165 0 0 1 552,-1687.7362 v -360.8379 h -576 V 2850.2362 h -408.567 z"
+           style="fill:none;stroke:#0000ff"
+           id="path15473" />
+      </g>
+    </g>
+    <g
+       id="g15547"
+       transform="matrix(0,-0.26458333,0.26458333,0,212.5094,1554.231)">
+      <g
+         inkscape:label="0"
+         id="g15519" />
+      <g
+         inkscape:label="CUTOUTS"
+         id="g15521" />
+      <g
+         inkscape:label="PERIMETER"
+         id="g15525">
+        <path
+           d="M 2107.5498,654.80317 H 3119.3425 L 2931.8036,486.23621 h -132.9975 a 71.716535,71.716535 0 0 1 -124.3799,0 h -89.007 a 95.716535,95.716535 0 0 1 -177.6061,0 h -84.9324 a 119.71653,119.71653 0 1 1 0,-71.43307 h 84.9324 a 95.716535,95.716535 0 0 1 177.6061,0 h 89.007 a 71.716535,71.716535 0 0 1 124.3799,0 h 160.3826 l 346.4845,311.43311 H 2080.1647 L 1774.8454,451.8039 V 246.23618 h -47.1289 v 576.56699 h 1989.2716 l -683.7392,-573.72532 -7.8074,-2.84167 H 1850.644 v 177.6505 z"
+           style="fill:none;stroke:#0000ff"
+           id="path15523" />
+      </g>
+    </g>
+    <g
+       id="g15497-0"
+       transform="matrix(-0.26458333,0,0,-0.26458333,-320.07384,1836.5643)">
+      <g
+         inkscape:label="0"
+         id="g15469-4" />
+      <g
+         inkscape:label="CUTOUTS"
+         id="g15471-1" />
+      <g
+         inkscape:label="PERIMETER"
+         id="g15475-6">
+        <path
+           d="m -3288.2835,3120.877 312,371.8271 v 1533.7603 l 59.5063,70.9169 h 250.0968 a 71.716535,71.716535 0 1 1 0,71.4331 h -283.4065 l -97.6296,-116.3504 v -499.1446 l -96.567,80.6473 v 453.6447 l 282.0027,336.0777 a 71.716535,71.716535 0 1 1 -54.7209,45.9163 l -298.7148,-355.9944 v -513.0553 l 168,-140.3041 v -125.814 l -264.567,220.9514 v 593.3694 l 250.6178,298.6746 v 606.8521 a 71.716535,71.716535 0 1 1 -71.4331,0 v -580.8525 l -250.6177,-298.6746 v -652.78 l 336,-280.6082 v -337.6225 l -183.9247,153.6034 a 71.716535,71.716535 0 1 1 -45.7889,-54.8275 l 229.7136,-191.8438 v -179.9637 l -312.0001,-371.8271 v -408.6524 h -96.5669 v 2237.2212 h -12 v 1080.0601 l 2.8417,7.8074 600.2143,715.3076 9.511,-7.9806 a 2855.7165,2855.7165 0 0 1 552,-1687.7362 v -360.8379 h -576 V 2850.2362 h -408.567 z"
+           style="fill:none;stroke:#0000ff"
+           id="path15473-1" />
+      </g>
+    </g>
+    <g
+       id="g15547-4"
+       transform="matrix(0,0.26458333,-0.26458333,0,401.56155,-441.72389)">
+      <g
+         inkscape:label="0"
+         id="g15519-5" />
+      <g
+         inkscape:label="CUTOUTS"
+         id="g15521-2" />
+      <g
+         inkscape:label="PERIMETER"
+         id="g15525-3">
+        <path
+           d="M 2107.5498,654.80317 H 3119.3425 L 2931.8036,486.23621 h -132.9975 a 71.716535,71.716535 0 0 1 -124.3799,0 h -89.007 a 95.716535,95.716535 0 0 1 -177.6061,0 h -84.9324 a 119.71653,119.71653 0 1 1 0,-71.43307 h 84.9324 a 95.716535,95.716535 0 0 1 177.6061,0 h 89.007 a 71.716535,71.716535 0 0 1 124.3799,0 h 160.3826 l 346.4845,311.43311 H 2080.1647 L 1774.8454,451.8039 V 246.23618 h -47.1289 v 576.56699 h 1989.2716 l -683.7392,-573.72532 -7.8074,-2.84167 H 1850.644 v 177.6505 z"
+           style="fill:none;stroke:#0000ff"
+           id="path15523-3" />
+      </g>
+    </g>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.100019;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect2436"
+       width="609.5"
+       height="1219.1"
+       x="-609.54999"
+       y="0.050009448"
+       transform="scale(-1,1)" />
+  </g>
+</svg>
