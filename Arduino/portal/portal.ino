@@ -1,187 +1,166 @@
-  #include <FastLED.h>
-  #include <Encoder.h>
+#include <FastLED.h>
+#include <Encoder.h>
+#include "portal.h"
+#include "knob.h"
+#include "ring.h"
 
-  #define NUM_LEDS                  250
-  #define LED_PIN                   8
-  #define BUTTON_PIN                7
-  #define POT_PIN_1A                2
-  #define POT_PIN_1B                4
-  #define POT_PIN_2A                3
-  #define POT_PIN_2B                5
-  #define DELAY                     10
-  #define POT_CACHE_SIZE            10
-  #define IDLE_SLACK                5
-  #define IDLE_TICKS                25
-  #define IDLE_TRANSITION_OUT_TIME  50
-  #define IDLE_TRANSITION_IN_TIME   3
+#define LED_RING_PIN              8
+#define LED_KNOB_L_PIN            9
+#define LED_KNOB_R_PIN            10
+#define BUTTON_PIN                7
+#define POT_PIN_L1                2
+#define POT_PIN_L2                4
+#define POT_PIN_R1                3
+#define POT_PIN_R2                5
+#define DELAY                     10
+#define POT_CACHE_SIZE            10
+#define VELOCITY_CACHE_SIZE       3
 
-  // Shooting Stars Animation
-  #define NUM_STARS   5
-  #define SPEED       30 // Inverse
-  #define STAR_FADE   200 // (0-255 where 255 is no fade)
+// Variables to store pot (encoder) readings
+long potLCache[POT_CACHE_SIZE] = {0};
+long potRCache[POT_CACHE_SIZE] = {0};
+int potIndex = 0;
 
-  // Variables to store the readings
-  long pot1Cache[POT_CACHE_SIZE] = {0};
-  long pot2Cache[POT_CACHE_SIZE] = {0};
-  int pot1Index = 0;
-  int pot2Index = 0;
-  int buttonState = 0;
+// Pot (encoder) velocity
+long velocityLCache[VELOCITY_CACHE_SIZE] = {0};
+long velocityRCache[VELOCITY_CACHE_SIZE] = {0};
+int velocityIndex = 0;
+unsigned long lastTime = 0;
 
-  // Timers
-  long idle_ticker = 0;
-  long active_ticker = 0;
+int buttonState = 0;
 
-  // Variable for hue shifting
-  int startingHue = 0;
+// Timers
+long idleTicker = IDLE_TICKS + IDLE_TRANSITION_OUT_TIME + 1;
+long activeTicker = 0;
 
-  CRGB leds[NUM_LEDS];
+CRGB leds_ring[NUM_LEDS_RING];
+CRGB leds_knob_l[NUM_LEDS_KNOB];
+CRGB leds_knob_r[NUM_LEDS_KNOB];
 
-  Encoder myEncoder1(POT_PIN_1A, POT_PIN_1B);
-  Encoder myEncoder2(POT_PIN_2A, POT_PIN_2B);
+Encoder myEncoderL(POT_PIN_L1, POT_PIN_L2);
+Encoder myEncoderR(POT_PIN_R1, POT_PIN_R2);
 
-  void setup() {
-    // Initialize serial communication at 9600 bits per second
-    Serial.begin(9600);
-    
-    // Set the button pin as input
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
+void setup() {
+  // Initialize serial communication at 9600 bits per second
+  Serial.begin(9600);
+  
+  // Set the button pin as input
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
 
-    FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
-    FastLED.clear();
-    FastLED.show();
+  FastLED.addLeds<WS2812, LED_RING_PIN, GRB>(leds_ring, NUM_LEDS_RING);
+  FastLED.addLeds<WS2812, LED_KNOB_L_PIN, GRB>(leds_knob_l, NUM_LEDS_KNOB);
+  FastLED.addLeds<WS2812, LED_KNOB_R_PIN, GRB>(leds_knob_r, NUM_LEDS_KNOB);
+  FastLED.clear();
+  FastLED.show();
+
+  lastTime = millis();
+}
+
+void loop() {
+  // Read the pot values
+  long potL = myEncoderL.read();
+  long potR = myEncoderR.read();
+
+  // Calculate velocities
+  long currentTime = millis();
+  unsigned long deltaTime = currentTime - lastTime;
+  
+  long deltaPosL = abs(potL - potLCache[last_cache_index()]);
+  long deltaPosR = abs(potR - potRCache[last_cache_index()]);
+
+  float velocityL = (float)deltaPosL / (deltaTime / 1000.0);
+  float velocityR = (float)deltaPosR / (deltaTime / 1000.0);
+
+  check_idle(potL, potR);
+
+  // Read the state of the button (HIGH or LOW)
+  buttonState = digitalRead(BUTTON_PIN);
+
+  //print_state(potL, potR, buttonState);
+
+  //// LEDs
+  // Clear all LEDs
+  if (is_idle()) {
+    activeTicker = 0;
+    ring_idle();
+    knob_idle();
+  } else {
+    ring_active(potL, potR);
+    knob_active(potL, potR);
+    activeTicker++;
   }
 
-  void loop() {
-    // Read the pot values
-    long pot1 = myEncoder1.read();
-    long pot2 = myEncoder2.read();
+  // Update the LED strip
+  FastLED.show();
 
-    check_idle(pot1, pot2);
+  //// Cleanup
+  // Pot cache
+  potLCache[potIndex] = potL;
+  potRCache[potIndex] = potR;
 
-    // Read the state of the button (HIGH or LOW)
-    buttonState = digitalRead(BUTTON_PIN);
+  // Velocity cache
+  velocityLCache[velocityIndex] = velocityL;
+  velocityRCache[velocityIndex] = velocityR;
 
-    print_state(pot1, pot2, buttonState);
+  potIndex = (potIndex + 1) % POT_CACHE_SIZE;
+  velocityIndex = (velocityIndex + 1) % VELOCITY_CACHE_SIZE;
+  lastTime = currentTime;
 
-    //// LEDs
-    // Clear all LEDs
-    if (is_idle()) {
-      active_ticker = 0;
-      rainbow_cycle();
-    } else {
-      shooting_stars(pot1, pot2);
-      active_ticker++;
-    }
+  delay(DELAY);
+}
 
-    // Update the LED strip
-    FastLED.show();
-
-    //// Cleanup
-    // Pot cache
-    pot1Cache[pot1Index] = pot1;
-    pot2Cache[pot2Index] = pot2;
-
-    pot1Index = (pot1Index + 1) % POT_CACHE_SIZE;
-    pot2Index = (pot2Index + 1) % POT_CACHE_SIZE;
-
-    delay(DELAY);
+float velocity_average_l() {
+  float sum = 0.0;
+  int length = sizeof(velocityLCache) / sizeof(velocityLCache[0]); // 20 / 4 = 5
+  for (int i = 0; i < length; ++i) {
+    sum += velocityLCache[i];
   }
 
-  void check_idle(long pot1, long pot2) {
-    long cache_avg1 = 0;
-    long cache_avg2 = 0;
-    for (int i = 0; i < POT_CACHE_SIZE; i++) {
-      cache_avg1 += pot1Cache[i];
-      cache_avg2 += pot2Cache[i];
-    }
-    cache_avg1 = cache_avg1 / POT_CACHE_SIZE;
-    cache_avg2 = cache_avg2 / POT_CACHE_SIZE;
+  return sum / length;
+}
 
-    if (IDLE_SLACK > abs(pot1 - cache_avg1) && 
-        IDLE_SLACK > abs(pot2 - cache_avg2)) {
-      idle_ticker++;
-    } else {
-      idle_ticker = 0;
-    }
+float velocity_average_r() {
+  float sum = 0.0;
+  int length = sizeof(velocityRCache) / sizeof(velocityRCache[0]); // 20 / 4 = 5
+  for (int i = 0; i < length; ++i) {
+    sum += velocityRCache[i];
   }
 
-  bool is_idle() {
-    return idle_ticker > (IDLE_TICKS + IDLE_TRANSITION_OUT_TIME);
+  return sum / length;
+}
+
+int last_cache_index() {
+  int newIndex = potIndex - 1;
+  // Perform a newIndex % POT_CACHE_SIZE accounting for negatives (C++ modulo doesn't behave like mathematical)
+  return (newIndex % POT_CACHE_SIZE + POT_CACHE_SIZE) % POT_CACHE_SIZE;
+}
+
+void check_idle(long potL, long potR) {
+  long cache_avgL = 0;
+  long cache_avgR = 0;
+  for (int i = 0; i < POT_CACHE_SIZE; i++) {
+    cache_avgL += potLCache[i];
+    cache_avgR += potRCache[i];
   }
+  cache_avgL = cache_avgL / POT_CACHE_SIZE;
+  cache_avgR = cache_avgR / POT_CACHE_SIZE;
 
-  void print_state(long position1, long position2, int buttonState) {
-    // Print the values to the serial monitor
-    Serial.print(position1);
-    Serial.print(" ");
-    Serial.print(position2);
-    Serial.print(" ");
-    Serial.println(buttonState); // New line after button state
+  if (IDLE_SLACK > abs(potL - cache_avgL) && 
+      IDLE_SLACK > abs(potR - cache_avgR)) {
+    idleTicker++;
+  } else {
+    idleTicker = 0;
   }
+}
 
-  void rainbow_cycle() {
-    long brightness = min((idle_ticker - IDLE_TICKS - IDLE_TRANSITION_OUT_TIME) / IDLE_TRANSITION_IN_TIME, 255);
+bool is_idle() {
+  return idleTicker > (IDLE_TICKS + IDLE_TRANSITION_OUT_TIME);
+}
 
-    // Turn on LEDs for the first potentiometer (from the front)
-    for (int i = 0; i < NUM_LEDS/2; i++) {
-      int hue = startingHue + map(i, 0, NUM_LEDS/2 * 2, 0, 255);  // Gradient from starting hue
-      leds[i] = CHSV(hue, 255, brightness);  // Rainbow color with full saturation and brightness
-    }
-
-    // Turn on LEDs for the second potentiometer (from the back)
-    for (int i = NUM_LEDS - 1; i >= NUM_LEDS/2; i--) {
-      int hue = startingHue + map(NUM_LEDS - 1 - i, 0, NUM_LEDS/2 * 2, 0, 255);  // Same gradient from starting hue
-      leds[i] = CHSV(hue, 255, brightness);  // Rainbow color with full saturation and brightness
-    }
-
-    // Slowly shift the hue for the rainbow cycle
-    startingHue += 1;  // Increment the hue to slowly cycle through the rainbow
-    if (startingHue >= 255) {
-      startingHue = 0;  // Wrap around when it reaches 255
-    }
-  }
-
-  bool group_on(int light_index, long pot_pos) {
-    long pos = ((pot_pos % (NUM_LEDS * SPEED)) + (NUM_LEDS * SPEED)) % (NUM_LEDS * SPEED); // Handle negatives
-
-    // Reduce to postion in LED index range
-    pos = (pos / SPEED) % NUM_LEDS;
-
-    bool on = false;
-    for (int i = 0; i < NUM_STARS; i++) {
-      if ((light_index + i * NUM_LEDS / NUM_STARS) % NUM_LEDS == pos) {
-        on = true;
-        continue;
-      }
-    }
-    return on;
-  }
-
-  void shooting_stars(long pot_1, long pot_2) {
-    if (active_ticker == 0) {
-      fill_solid(leds, NUM_LEDS, CRGB::Black);
-    }
-
-    // Fade out
-    long brightness;
-    if (idle_ticker > IDLE_TICKS) {
-      brightness = map((float)(idle_ticker - IDLE_TICKS) / IDLE_TRANSITION_OUT_TIME * 255, 255, 0, 0, 255);
-    } else {
-      brightness = 255;
-    }
-
-    for (int i = 0; i < NUM_LEDS; i++) {
-      leds[i].nscale8(STAR_FADE);  // 230/255 ≈ 0.9 (reduces brightness by ~10%)
-    }
-
-    for (int i = 0; i < NUM_LEDS; i++) {
-      bool group_1 = group_on(i, pot_1);
-      bool group_2 = group_on(i, pot_2);
-      long brightness_blue = 0; long brightness_green = 0;
-      if (group_1) {
-        leds[i].b = brightness;
-      } 
-      if (group_2) {
-        leds[i].g = brightness;
-      }
-    }
-  }
+void print_state(long potL, long potR, int buttonState) {
+  Serial.print(potL);
+  Serial.print(" ");
+  Serial.print(potR);
+  Serial.print(" ");
+  Serial.println(buttonState);
+}
