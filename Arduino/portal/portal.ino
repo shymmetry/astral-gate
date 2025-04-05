@@ -76,7 +76,7 @@ void loop() {
   // Read the state of the button (HIGH or LOW)
   buttonState = digitalRead(BUTTON_PIN);
 
-  //print_state(potL, potR, buttonState);
+  print_state(potL, potR, buttonState);
 
   //// LEDs
   // Clear all LEDs
